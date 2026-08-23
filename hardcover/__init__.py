@@ -1,0 +1,1 @@
+# hardcover MCP package
