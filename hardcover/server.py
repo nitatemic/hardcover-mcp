@@ -40,7 +40,6 @@ Exposes the following tools:
 
   Other users
   ───────────
-  • get_user_by_username    — look up a public user profile
   • get_user_library        — another user's library filtered by status
 
   Lists
@@ -302,15 +301,6 @@ TOOLS: list[types.Tool] = [
         },
     ),
     types.Tool(
-        name="get_user_by_username",
-        description="Look up a public Hardcover user profile by username.",
-        input_schema={
-            "type": "object",
-            "properties": {"username": {"type": "string", "description": "Hardcover username"}},
-            "required": ["username"],
-        },
-    ),
-    types.Tool(
         name="get_user_library",
         description=(
             "Get another user's library filtered by reading status. "
@@ -488,9 +478,6 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
 
         case "get_my_reading_journal":
             return _run(Q.GET_MY_READING_JOURNAL, {"book_id": arguments["book_id"]})
-
-        case "get_user_by_username":
-            return _run(Q.GET_USER_BY_USERNAME, {"username": arguments["username"]})
 
         case "get_user_library":
             return _run(Q.GET_USER_LIBRARY_BY_STATUS, {

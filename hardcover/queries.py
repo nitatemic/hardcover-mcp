@@ -447,17 +447,6 @@ query GetUserBook($book_id: Int!) {
 # User profile (by username)
 # ---------------------------------------------------------------------------
 
-GET_USER_BY_USERNAME = """
-query GetUserByUsername($username: String!) {
-  users(where: {username: {_eq: $username}}) {
-    id
-    username
-    name
-    user_books_count
-  }
-}
-"""
-
 GET_USER_LIBRARY_BY_STATUS = """
 query GetUserLibraryByStatus(
   $user_id: Int!
@@ -501,6 +490,9 @@ GET_MY_READING_JOURNAL = """
 query GetMyReadingJournal($book_id: Int!) {
   me {
     user_books(where: {book_id: {_eq: $book_id}}) {
+      id
+      status_id
+      rating
       user_book_reads {
         id
         started_at
@@ -511,14 +503,20 @@ query GetMyReadingJournal($book_id: Int!) {
           title
           edition_format
         }
-        reading_journal_entries(order_by: {created_at: desc}) {
-          id
-          entry
-          created_at
-          progress_pages
-        }
       }
     }
+  }
+  reading_journals(
+    where: {book_id: {_eq: $book_id}}
+    order_by: {action_at: desc}
+  ) {
+    id
+    event
+    entry
+    action_at
+    created_at
+    metadata
+    edition_id
   }
 }
 """

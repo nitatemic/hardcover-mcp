@@ -1,6 +1,6 @@
 # hardcover-mcp
 
-> **⚠️ Beta v0.1.0** — This is an early release. The API surface, tool names, and query structure may change. Please report issues and feedback via [GitHub Issues](https://github.com/YOUR_USERNAME/hardcover-mcp/issues).
+> **⚠️ Beta v0.1.1** — This is an early release. The API surface, tool names, and query structure may change. Please report issues and feedback via [GitHub Issues](https://github.com/muhyousri/hardcover-mcp/issues).
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for the [Hardcover](https://hardcover.app) API — the book-tracking platform that uses the same GraphQL API for its website, iOS, and Android apps.
 
@@ -36,7 +36,7 @@ Connect any MCP-compatible AI assistant (Claude Desktop, Cursor, Kiro, or any MC
 - 🎯 **Reading goals** — progress, state, and target for all your goals
 - 🗓️ **Books by date range** — list every book you finished between two dates
 - 📓 **Reading journal** — per-book session history
-- 👤 **User profiles** — your profile and public profiles by username
+- 👤 **User profiles** — your profile and other users' libraries
 - 📋 **Lists** — retrieve any Hardcover list with its books
 - 🏃 **Activity feed** — your recent activity and activity on specific books
 - 🔖 **Editions** — look up by title, ID, or ISBN-10/13
@@ -120,7 +120,6 @@ Connect any MCP-compatible AI assistant (Claude Desktop, Cursor, Kiro, or any MC
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
-| `get_user_by_username` | `username` | Look up a public user profile |
 | `get_user_library` | `user_id`, `status_id`, `limit?`, `offset?` | Another user's library filtered by reading status |
 
 ### Lists
@@ -144,7 +143,7 @@ Connect any MCP-compatible AI assistant (Claude Desktop, Cursor, Kiro, or any MC
 ### With uv (recommended)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/hardcover-mcp
+git clone https://github.com/muhyousri/hardcover-mcp
 cd hardcover-mcp
 uv sync
 ```
@@ -152,7 +151,7 @@ uv sync
 ### With pip
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/hardcover-mcp
+git clone https://github.com/muhyousri/hardcover-mcp
 cd hardcover-mcp
 pip install -e .
 ```
@@ -309,7 +308,7 @@ For more details see the official [Getting Started guide](https://docs.hardcover
 ## Development
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/hardcover-mcp
+git clone https://github.com/muhyousri/hardcover-mcp
 cd hardcover-mcp
 
 # Create virtualenv and install with dev deps
