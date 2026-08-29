@@ -71,7 +71,7 @@ class TestToolDefinitions:
     def test_expected_tools_present(self):
         names = {t.name for t in TOOLS}
         expected = {
-            "get_me", "search",
+            "get_me", "hardcover_search",
             "get_book_by_id", "get_book_by_slug",
             "get_editions_by_title", "get_edition_by_id", "get_editions_by_isbn",
             "get_author_by_id", "get_author_by_slug", "get_author_books",
@@ -110,7 +110,7 @@ class TestDispatchHappyPath:
         mock_data = {"search": {"results": [], "query": "dune"}}
         with patch.object(server_module, "_get_client") as mock_get:
             mock_get.return_value.execute.return_value = mock_data
-            _call("search", {"query": "dune"})
+            _call("hardcover_search", {"query": "dune"})
             call_vars = mock_get.return_value.execute.call_args[0][1]
         assert call_vars["query"] == "dune"
         assert call_vars["query_type"] == "book"
@@ -120,7 +120,7 @@ class TestDispatchHappyPath:
     def test_search_custom_type_and_pagination(self):
         with patch.object(server_module, "_get_client") as mock_get:
             mock_get.return_value.execute.return_value = {"search": {"results": []}}
-            _call("search", {"query": "rowling", "query_type": "author", "per_page": 10, "page": 2})
+            _call("hardcover_search", {"query": "rowling", "query_type": "author", "per_page": 10, "page": 2})
             call_vars = mock_get.return_value.execute.call_args[0][1]
         assert call_vars["query_type"] == "author"
         assert call_vars["per_page"] == 10

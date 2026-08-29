@@ -126,7 +126,7 @@ TOOLS: list[types.Tool] = [
         input_schema={"type": "object", "properties": {}, "required": []},
     ),
     types.Tool(
-        name="search",
+        name="hardcover_search",
         description=(
             "Search Hardcover for books, authors, series, users, lists, characters, "
             "publishers, or prompts. Returns rich result objects from Typesense. "
@@ -415,7 +415,7 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
         case "get_me":
             return _run(Q.ME_FULL)
 
-        case "search":
+        case "hardcover_search":
             return _run(Q.SEARCH, {
                 "query": arguments["query"],
                 "query_type": arguments.get("query_type", "book"),
