@@ -50,6 +50,7 @@ Exposes the following tools:
 from __future__ import annotations
 
 import json
+import os
 import sys
 from typing import Any
 
@@ -529,10 +530,34 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
 # ---------------------------------------------------------------------------
 # MCP handler functions (wired into Server via constructor)
 # ---------------------------------------------------------------------------
+# Tool filtering via environment variables
+# ---------------------------------------------------------------------------
+#   HARDCOVER_ENABLED_TOOLS  - comma-separated allowlist; if set, ONLY these register
+#   HARDCOVER_DISABLED_TOOLS - comma-separated denylist; ignored if an allowlist is set
+# Tool names are case-insensitive.
+
+def _parse_tool_set(value: str | None) -> set[str]:
+    if not value:
+        return set()
+    return {name.strip().lower() for name in value.split(",") if name.strip()}
+
+_enabled_tools = _parse_tool_set(os.getenv("HARDCOVER_ENABLED_TOOLS"))
+_disabled_tools = _parse_tool_set(os.getenv("HARDCOVER_DISABLED_TOOLS"))
+
+def _filter_tools(tools: list[types.Tool]) -> list[types.Tool]:
+    if _enabled_tools:
+        return [t for t in tools if t.name.lower() in _enabled_tools]
+    if _disabled_tools:
+        return [t for t in tools if t.name.lower() not in _disabled_tools]
+    return tools
+
+FILTERED_TOOLS = _filter_tools(TOOLS)
+
+# ---------------------------------------------------------------------------
 
 
 async def handle_list_tools(ctx: Any, params: Any) -> types.ListToolsResult:
-    return types.ListToolsResult(tools=TOOLS)
+    return types.ListToolsResult(tools=FILTERED_TOOLS)
 
 
 async def handle_call_tool(ctx: Any, params: Any) -> types.CallToolResult:
