@@ -57,6 +57,7 @@ from typing import Any
 import mcp_types as types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
+from mcp import types as mcp_sdk_types
 
 from hardcover import queries as Q
 from hardcover.client import (
@@ -556,27 +557,35 @@ FILTERED_TOOLS = _filter_tools(TOOLS)
 # ---------------------------------------------------------------------------
 
 
-async def handle_list_tools(ctx: Any, params: Any) -> types.ListToolsResult:
-    return types.ListToolsResult(tools=FILTERED_TOOLS)
-
-
-async def handle_call_tool(ctx: Any, params: Any) -> types.CallToolResult:
-    content = _dispatch(params.name, params.arguments or {})
-    return types.CallToolResult(content=content)
-
-
-# ---------------------------------------------------------------------------
-# Server factory
-# ---------------------------------------------------------------------------
-
-
 def build_server() -> Server:
     """Create and return the configured MCP server instance."""
-    return Server(
-        "hardcover-mcp",
-        on_list_tools=handle_list_tools,
-        on_call_tool=handle_call_tool,
-    )
+    server = Server("hardcover-mcp")
+
+    @server.list_tools()
+    async def handle_list_tools() -> list[mcp_sdk_types.Tool]:
+        # Convert from mcp_types.Tool to mcp.types.Tool (different Pydantic models)
+        return [
+            mcp_sdk_types.Tool(
+                name=t.name,
+                description=t.description,
+                inputSchema=t.input_schema,
+            )
+            for t in FILTERED_TOOLS
+        ]
+
+    @server.call_tool()
+    async def handle_call_tool(name: str, arguments: dict) -> list[mcp_sdk_types.TextContent | mcp_sdk_types.ImageContent | mcp_sdk_types.EmbeddedResource]:
+        results = _dispatch(name, arguments or {})
+        # Convert from mcp_types content to mcp.types content
+        converted = []
+        for r in results:
+            if hasattr(r, 'text'):
+                converted.append(mcp_sdk_types.TextContent(type="text", text=r.text))
+            else:
+                converted.append(r)
+        return converted
+
+    return server
 
 
 # ---------------------------------------------------------------------------
