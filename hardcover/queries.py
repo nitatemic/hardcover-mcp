@@ -561,7 +561,7 @@ query GetListById($id: Int!) {
 # ---------------------------------------------------------------------------
 
 GET_READING_STATS = """
-query GetReadingStats($user_id: Int!, $since: date) {
+query GetReadingStats($user_id: Int!, $since: date!) {
   all_time: user_books_aggregate(
     where: {
       user_id: {_eq: $user_id}
@@ -578,6 +578,33 @@ query GetReadingStats($user_id: Int!, $since: date) {
       user_id: {_eq: $user_id}
       status_id: {_eq: 3}
       last_read_date: {_gte: $since}
+    }
+  ) {
+    aggregate {
+      count
+      avg { rating }
+    }
+  }
+}
+"""
+
+GET_READING_STATS_ALL_TIME = """
+query GetReadingStatsAllTime($user_id: Int!) {
+  all_time: user_books_aggregate(
+    where: {
+      user_id: {_eq: $user_id}
+      status_id: {_eq: 3}
+    }
+  ) {
+    aggregate {
+      count
+      avg { rating }
+    }
+  }
+  filtered: user_books_aggregate(
+    where: {
+      user_id: {_eq: $user_id}
+      status_id: {_eq: 3}
     }
   ) {
     aggregate {

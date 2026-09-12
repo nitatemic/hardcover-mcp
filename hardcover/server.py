@@ -493,9 +493,13 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             return _run(Q.GET_LIST_BY_ID, {"id": arguments["id"]})
 
         case "get_reading_stats":
-            return _run(Q.GET_READING_STATS, {
+            if arguments.get("since"):
+                return _run(Q.GET_READING_STATS, {
+                    "user_id": arguments["user_id"],
+                    "since": arguments["since"],
+                })
+            return _run(Q.GET_READING_STATS_ALL_TIME, {
                 "user_id": arguments["user_id"],
-                "since": arguments.get("since"),
             })
 
         case "get_books_read_between":
