@@ -85,10 +85,14 @@ class RateLimitState:
         state = cls()
         state.raw = dict(headers)
 
-        # Legacy X-RateLimit-* headers (more reliable to parse than the IETF draft)
         def _int(key: str) -> int | None:
             val = headers.get(key)
-            return int(val) if val is not None else None
+            if val is None:
+                return None
+            try:
+                return int(val)
+            except (ValueError, TypeError):
+                return None
 
         state.remaining_burst = _int("x-ratelimit-remaining")
         state.remaining_daily = _int("x-ratelimit-daily-remaining")
@@ -220,9 +224,8 @@ class HardcoverClient:
                 time.sleep(2**attempt)  # simple exponential back-off
                 continue
 
-            # Anything else
             raise HardcoverError(
-                f"Unexpected HTTP {status}: {response.text[:200]}"
+                f"Unexpected HTTP {status}"
             )
 
     # ------------------------------------------------------------------
@@ -245,16 +248,15 @@ class HardcoverClient:
             )
             raise GraphQLError(f"GraphQL errors: {messages}", errors=errors)
 
-        data = body.get("data")
+        data = body.get("data") if isinstance(body, dict) else None
         if data is None:
-            raise HardcoverError(
-                f"Response missing 'data' field: {body}"
-            )
+            raise HardcoverError("Response missing 'data' field")
         return data
 
     @staticmethod
     def _safe_json(response: httpx.Response) -> dict[str, Any]:
         try:
-            return response.json()
+            body = response.json()
+            return body if isinstance(body, dict) else {}
         except Exception:
             return {}

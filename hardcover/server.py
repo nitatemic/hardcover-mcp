@@ -412,12 +412,21 @@ TOOLS: list[types.Tool] = [
 # ---------------------------------------------------------------------------
 
 
+def _require_arg(key: str, arguments: dict[str, Any]) -> str | None:
+    val = arguments.get(key)
+    if val is None or (isinstance(val, str) and not val.strip()):
+        return f"Missing required argument: {key}"
+    return None
+
+
 def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
     match name:
         case "get_me":
             return _run(Q.ME_FULL)
 
         case "hardcover_search":
+            if err := _require_arg("query", arguments):
+                return _error(err)
             return _run(Q.SEARCH, {
                 "query": arguments["query"],
                 "query_type": arguments.get("query_type", "book"),
@@ -426,27 +435,43 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             })
 
         case "get_book_by_id":
+            if err := _require_arg("id", arguments):
+                return _error(err)
             return _run(Q.GET_BOOK_BY_ID, {"id": arguments["id"]})
 
         case "get_book_by_slug":
+            if err := _require_arg("slug", arguments):
+                return _error(err)
             return _run(Q.GET_BOOK_BY_SLUG, {"slug": arguments["slug"]})
 
         case "get_editions_by_title":
+            if err := _require_arg("title", arguments):
+                return _error(err)
             return _run(Q.GET_EDITIONS_BY_TITLE, {"title": arguments["title"]})
 
         case "get_edition_by_id":
+            if err := _require_arg("id", arguments):
+                return _error(err)
             return _run(Q.GET_EDITION_BY_ID, {"id": arguments["id"]})
 
         case "get_editions_by_isbn":
+            if err := _require_arg("isbn", arguments):
+                return _error(err)
             return _run(Q.GET_EDITIONS_BY_ISBN, {"isbn": arguments["isbn"]})
 
         case "get_author_by_id":
+            if err := _require_arg("id", arguments):
+                return _error(err)
             return _run(Q.GET_AUTHOR_BY_ID, {"id": arguments["id"]})
 
         case "get_author_by_slug":
+            if err := _require_arg("slug", arguments):
+                return _error(err)
             return _run(Q.GET_AUTHOR_BY_SLUG, {"slug": arguments["slug"]})
 
         case "get_author_books":
+            if err := _require_arg("author_id", arguments):
+                return _error(err)
             return _run(Q.GET_AUTHOR_BOOKS, {
                 "author_id": arguments["author_id"],
                 "limit": arguments.get("limit", 20),
@@ -454,9 +479,13 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             })
 
         case "get_series_by_id":
+            if err := _require_arg("id", arguments):
+                return _error(err)
             return _run(Q.GET_SERIES_BY_ID, {"id": arguments["id"]})
 
         case "get_books_in_series":
+            if err := _require_arg("series_id", arguments):
+                return _error(err)
             return _run(Q.GET_BOOKS_IN_SERIES, {"series_id": arguments["series_id"]})
 
         case "get_my_library":
@@ -466,6 +495,8 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             })
 
         case "get_library_by_status":
+            if err := _require_arg("status_id", arguments):
+                return _error(err)
             return _run(Q.GET_LIBRARY_BY_STATUS, {
                 "status_id": arguments["status_id"],
                 "limit": arguments.get("limit", 25),
@@ -476,12 +507,20 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             return _run(Q.GET_READING_PROGRESS)
 
         case "get_user_book":
+            if err := _require_arg("book_id", arguments):
+                return _error(err)
             return _run(Q.GET_USER_BOOK, {"book_id": arguments["book_id"]})
 
         case "get_my_reading_journal":
+            if err := _require_arg("book_id", arguments):
+                return _error(err)
             return _run(Q.GET_MY_READING_JOURNAL, {"book_id": arguments["book_id"]})
 
         case "get_user_library":
+            if err := _require_arg("user_id", arguments):
+                return _error(err)
+            if err := _require_arg("status_id", arguments):
+                return _error(err)
             return _run(Q.GET_USER_LIBRARY_BY_STATUS, {
                 "user_id": arguments["user_id"],
                 "status_id": arguments["status_id"],
@@ -490,15 +529,25 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             })
 
         case "get_list_by_id":
+            if err := _require_arg("id", arguments):
+                return _error(err)
             return _run(Q.GET_LIST_BY_ID, {"id": arguments["id"]})
 
         case "get_reading_stats":
+            if err := _require_arg("user_id", arguments):
+                return _error(err)
             return _run(Q.GET_READING_STATS, {
                 "user_id": arguments["user_id"],
                 "since": arguments.get("since"),
             })
 
         case "get_books_read_between":
+            if err := _require_arg("user_id", arguments):
+                return _error(err)
+            if err := _require_arg("since", arguments):
+                return _error(err)
+            if err := _require_arg("until", arguments):
+                return _error(err)
             return _run(Q.GET_BOOKS_READ_BETWEEN, {
                 "user_id": arguments["user_id"],
                 "since": arguments["since"],
@@ -511,6 +560,8 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             return _run(Q.GET_MY_GOALS)
 
         case "get_my_activities":
+            if err := _require_arg("user_id", arguments):
+                return _error(err)
             return _run(Q.GET_MY_ACTIVITIES, {
                 "user_id": arguments["user_id"],
                 "limit": arguments.get("limit", 20),
@@ -518,6 +569,8 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             })
 
         case "get_book_activities":
+            if err := _require_arg("book_id", arguments):
+                return _error(err)
             return _run(Q.GET_BOOK_ACTIVITIES, {
                 "book_id": arguments["book_id"],
                 "limit": arguments.get("limit", 20),
