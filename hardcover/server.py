@@ -479,7 +479,30 @@ def _dispatch(name: str, arguments: dict[str, Any]) -> list[types.TextContent]:
             return _run(Q.GET_USER_BOOK, {"book_id": arguments["book_id"]})
 
         case "get_my_reading_journal":
-            return _run(Q.GET_MY_READING_JOURNAL, {"book_id": arguments["book_id"]})
+            # reading_journals must be scoped to the authenticated user (privacy).
+            # The previous query returned ALL users' journals for the book.
+            try:
+                me_data = _get_client().execute(Q.ME_FULL)
+                me_obj = me_data.get("me")
+                if isinstance(me_obj, list):
+                    me_obj = me_obj[0] if me_obj else None
+                if not me_obj or "id" not in me_obj:
+                    return _error("Could not determine current user id for reading journal")
+                user_id = me_obj["id"]
+            except AuthError as exc:
+                return _error(f"Authentication failed: {exc}")
+            except RateLimitError as exc:
+                hint = f" Retry after {exc.retry_after}s." if exc.retry_after else ""
+                return _error(f"Rate limit exceeded.{hint}")
+            except ForbiddenError as exc:
+                return _error(f"Forbidden: {exc}")
+            except QueryTimeoutError:
+                return _error("Query timed out (30s server limit). Try a more specific query.")
+            except GraphQLError as exc:
+                return _error(f"GraphQL error: {exc}")
+            except HardcoverError as exc:
+                return _error(str(exc))
+            return _run(Q.GET_MY_READING_JOURNAL, {"book_id": arguments["book_id"], "user_id": user_id})
 
         case "get_user_library":
             return _run(Q.GET_USER_LIBRARY_BY_STATUS, {

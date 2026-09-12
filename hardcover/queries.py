@@ -487,7 +487,7 @@ query GetUserLibraryByStatus(
 # ---------------------------------------------------------------------------
 
 GET_MY_READING_JOURNAL = """
-query GetMyReadingJournal($book_id: Int!) {
+query GetMyReadingJournal($book_id: Int!, $user_id: Int!) {
   me {
     user_books(where: {book_id: {_eq: $book_id}}) {
       id
@@ -507,7 +507,7 @@ query GetMyReadingJournal($book_id: Int!) {
     }
   }
   reading_journals(
-    where: {book_id: {_eq: $book_id}}
+    where: {book_id: {_eq: $book_id}, user_id: {_eq: $user_id}}
     order_by: {action_at: desc}
   ) {
     id
