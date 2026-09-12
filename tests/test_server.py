@@ -396,7 +396,8 @@ class TestNewTools:
             mock_get.return_value.execute.return_value = {"all_time": {}, "filtered": {}}
             _call("get_reading_stats", {"user_id": 42})
             call_vars = mock_get.return_value.execute.call_args[0][1]
-        assert call_vars["since"] is None
+        assert call_vars == {"user_id": 42}
+        assert "since" not in call_vars
 
     def test_get_books_read_between(self):
         with patch.object(server_module, "_get_client") as mock_get:
