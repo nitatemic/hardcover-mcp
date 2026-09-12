@@ -236,17 +236,19 @@ class TestDispatchHappyPath:
         assert call_vars == {"book_id": 99}
 
     def test_get_my_reading_journal(self):
-        mock_data = {
+        me_data = {"me": [{"id": 42, "username": "alice"}]}
+        journal_data = {
             "me": [{"user_books": [{"id": 123, "status_id": 2, "rating": None, "user_book_reads": []}]}],
             "reading_journals": [
                 {"id": 1, "event": "progress_updated", "entry": None, "action_at": "2026-08-01T00:00:00+00:00", "created_at": "2026-08-01T00:00:00", "metadata": {"progress": 50}, "edition_id": 99}
             ],
         }
         with patch.object(server_module, "_get_client") as mock_get:
-            mock_get.return_value.execute.return_value = mock_data
+            mock_get.return_value.execute.side_effect = [me_data, journal_data]
             result = _call("get_my_reading_journal", {"book_id": 55})
-            call_vars = mock_get.return_value.execute.call_args[0][1]
-        assert call_vars == {"book_id": 55}
+            assert mock_get.return_value.execute.call_count == 2
+            journal_vars = mock_get.return_value.execute.call_args[0][1]
+        assert journal_vars == {"book_id": 55, "user_id": 42}
         parsed = _parse(result)
         assert "reading_journals" in parsed
         assert parsed["reading_journals"][0]["event"] == "progress_updated"
