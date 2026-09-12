@@ -20,18 +20,6 @@ Status IDs (user_books.status_id):
 # Me / current user
 # ---------------------------------------------------------------------------
 
-ME = """
-query Me {
-  me {
-    id
-    username
-    name
-    reading_journal_entries_count
-    user_books_count
-  }
-}
-"""
-
 # ---------------------------------------------------------------------------
 # Search  (counts as 1 request; max 1 search per top-level)
 # ---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # hardcover-mcp
 
-> **⚠️ Beta v0.1.1** — This is an early release. The API surface, tool names, and query structure may change. Please report issues and feedback via [GitHub Issues](https://github.com/muhyousri/hardcover-mcp/issues).
+> **⚠️ Beta v0.1.2** — This is an early release. The API surface, tool names, and query structure may change. Please report issues and feedback via [GitHub Issues](https://github.com/nitatemic/hardcover-mcp/issues).
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for the [Hardcover](https://hardcover.app) API — the book-tracking platform that uses the same GraphQL API for its website, iOS, and Android apps.
 
@@ -57,7 +57,7 @@ Connect any MCP-compatible AI assistant (Claude Desktop, Cursor, Kiro, or any MC
 
 | Tool | Arguments | Description |
 |------|-----------|-------------|
-| `search` | `query`, `query_type?`, `per_page?`, `page?` | Search books, authors, series, users, lists, characters, publishers, or prompts |
+| `hardcover_search` | `query`, `query_type?`, `per_page?`, `page?` | Search books, authors, series, users, lists, characters, publishers, or prompts |
 
 ### Books
 
@@ -296,7 +296,7 @@ For more details see the official [Getting Started guide](https://docs.hardcover
 
 ## Disclaimer
 
-> **This is a beta release (v0.1.0).** It is independent, community-built software and is **not** affiliated with, endorsed by, or supported by Hardcover.
+> **This is a beta release (v0.1.2).** It is independent, community-built software and is **not** affiliated with, endorsed by, or supported by Hardcover.
 >
 > - The Hardcover API is itself in beta and subject to breaking changes.
 > - Tool names, query structure, and response shapes in this MCP server may change between versions.
