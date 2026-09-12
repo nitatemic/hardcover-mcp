@@ -116,7 +116,7 @@ class HardcoverClient:
         self,
         api_key: str | None = None,
         timeout: float = _DEFAULT_TIMEOUT,
-        user_agent: str = "hardcover-mcp/0.1.2 (github.com/nitatemic/hardcover-mcp)",
+        user_agent: str = "hardcover-mcp/0.1.2 (github.com/muhyousri/hardcover-mcp)",
     ) -> None:
         self._api_key = api_key or os.environ.get("HARDCOVER_API_KEY", "")
         if not self._api_key:
