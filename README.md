@@ -1,6 +1,6 @@
 # hardcover-mcp
 
-> **⚠️ Beta v0.1.1** — This is an early release. The API surface, tool names, and query structure may change. Please report issues and feedback via [GitHub Issues](https://github.com/muhyousri/hardcover-mcp/issues).
+> **⚠️ Beta v0.1.2** — This is an early release. The API surface, tool names, and query structure may change. Please report issues and feedback via [GitHub Issues](https://github.com/muhyousri/hardcover-mcp/issues).
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for the [Hardcover](https://hardcover.app) API — the book-tracking platform that uses the same GraphQL API for its website, iOS, and Android apps.
 
