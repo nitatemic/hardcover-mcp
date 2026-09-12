@@ -331,6 +331,7 @@ query GetMyLibrary($limit: Int, $offset: Int) {
   me {
     user_books(
       distinct_on: book_id
+      order_by: [{book_id: asc}, {updated_at: desc}]
       limit: $limit
       offset: $offset
     ) {
@@ -462,6 +463,7 @@ query GetUserLibraryByStatus(
     limit: $limit
     offset: $offset
     distinct_on: book_id
+    order_by: [{book_id: asc}, {updated_at: desc}]
   ) {
     book {
       id
