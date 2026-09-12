@@ -263,15 +263,15 @@ TOOLS: list[types.Tool] = [
         name="get_library_by_status",
         description=(
             "Get the authenticated user's books filtered by reading status. "
-            "Status IDs: 1=Want to Read, 2=Currently Reading, 3=Read, 4=Did Not Finish, 5=Owned."
+            "Status IDs: 1=Want to Read, 2=Currently Reading, 3=Read, 4=Paused, 5=Did Not Finish, 6=Ignored."
         ),
         input_schema={
             "type": "object",
             "properties": {
                 "status_id": {
                     "type": "integer",
-                    "description": "1=Want to Read, 2=Currently Reading, 3=Read, 4=DNF, 5=Owned",
-                    "enum": [1, 2, 3, 4, 5],
+                    "description": "1=Want to Read, 2=Currently Reading, 3=Read, 4=Paused, 5=DNF, 6=Ignored",
+                    "enum": [1, 2, 3, 4, 5, 6],
                 },
                 "limit": {"type": "integer", "description": "Max results (default 25)", "default": 25},
                 "offset": {"type": "integer", "description": "Pagination offset (default 0)", "default": 0},
@@ -306,7 +306,7 @@ TOOLS: list[types.Tool] = [
         name="get_user_library",
         description=(
             "Get another user's library filtered by reading status. "
-            "Status IDs: 1=Want to Read, 2=Currently Reading, 3=Read, 4=Did Not Finish, 5=Owned."
+            "Status IDs: 1=Want to Read, 2=Currently Reading, 3=Read, 4=Paused, 5=Did Not Finish, 6=Ignored."
         ),
         input_schema={
             "type": "object",
@@ -314,8 +314,8 @@ TOOLS: list[types.Tool] = [
                 "user_id": {"type": "integer", "description": "Hardcover user ID"},
                 "status_id": {
                     "type": "integer",
-                    "description": "1=Want to Read, 2=Currently Reading, 3=Read, 4=DNF, 5=Owned",
-                    "enum": [1, 2, 3, 4, 5],
+                    "description": "1=Want to Read, 2=Currently Reading, 3=Read, 4=Paused, 5=DNF, 6=Ignored",
+                    "enum": [1, 2, 3, 4, 5, 6],
                 },
                 "limit": {"type": "integer", "description": "Max results (default 25)", "default": 25},
                 "offset": {"type": "integer", "description": "Pagination offset (default 0)", "default": 0},

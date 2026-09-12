@@ -11,8 +11,9 @@ Status IDs (user_books.status_id):
     1 = Want to Read
     2 = Currently Reading
     3 = Read
-    4 = Did Not Finish
-    5 = Owned
+    4 = Paused
+    5 = Did Not Finish
+    6 = Ignored
 """
 
 # ---------------------------------------------------------------------------
